@@ -21,7 +21,7 @@ const routes = [
   {
     path: '/dashboard',
     name: 'Dashboard',
-    component: () => import('@/pages/Dashboard.vue'),
+    component: () => import('@/pages/Dashboard2.vue'),
   },
   {
     alias: '/leads',
