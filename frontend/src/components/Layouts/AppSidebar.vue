@@ -543,13 +543,31 @@ const articles = ref([
 </script>
 
 <style scoped>
+html,body,#case-app { background: var(--glass);}
 /* ===== GLASS SIDEBAR ===== */
 .sidebar {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
-  background: var(--glass);
+   background: linear-gradient(
+    135deg,
+    hsl(var(--h) 70% 60% / 0.25),
+    hsl(var(--h) 70% 45% / 0.25)
+  );
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+}
+:root.dark .sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+   background:hsl(230 28% 12%/.45);
   border: 1px solid var(--glass-border);
   border-radius: 20px;
   backdrop-filter: blur(10px);
@@ -571,7 +589,11 @@ const articles = ref([
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: hsl(0 0% 100% / 0.35);
+   background: linear-gradient(
+    135deg,
+    hsl(var(--h) 70% 60% / 0.25),
+    hsl(var(--h) 70% 45% / 0.25)
+  );
   border-bottom: 1px solid var(--glass-border);
   gap: 1px;
 }

@@ -30,17 +30,7 @@
           </div>
         </div>
 
-        <!-- Chevron -->
-        <FeatherIcon
-          name="chevron-down"
-          class="chevron duration-300"
-
-          
-          :class="[
-            isCollapsed ? 'opacity-0 w-0' : 'opacity-70 w-4',
-            isRTL ? 'mr-1 rotate-180' : 'ml-1'
-          ]"
-        />
+       
       </button>
 
       <!-- Dropdown Menu -->
@@ -166,7 +156,7 @@ function getStandardItem(item) {
 }
 
 /* ===== BODY ===== */
-html, body, #app { height: 100%; margin: 0; }
+html, body, #app { height: 100%; margin: 0;  background: var(--glass); }
 body {
   font-family: Inter, "Cairo", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
   color: var(--txt);
@@ -183,9 +173,14 @@ body {
   display: grid;
   grid-template-columns: 1fr;
   padding: 18px;
+  background: var(--glass);
 }
 .card {
-  background: var(--glass);
+   background: linear-gradient(
+    135deg,
+    hsl(var(--h) 70% 60% / 0.25),
+    hsl(var(--h) 70% 45% / 0.25)
+  );
   border: 1px solid var(--glass-border);
   border-radius: 20px;
   backdrop-filter: blur(10px);
@@ -222,12 +217,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  width: 280px;
-  padding: 14px 18px;
+  width: 200px;
+  padding: 4px 8px;
   border-radius: 18px;
   border: 1px solid var(--glass-border);
-  background: var(--glass);
+   background: linear-gradient(
+    135deg,
+    hsl(var(--h) 70% 60% / 0.25),
+    hsl(var(--h) 70% 45% / 0.25)
+  );
   color: var(--txt);
 
   cursor: pointer;
@@ -278,5 +276,14 @@ body {
 .collapsed {
   justify-content: center;
   padding: 14px;
+}
+
+.profile:hover { transform: translateY(-1px); }
+.bg-glass-active {
+  background: hsl(0 0% 100% / 0.6);
+  backdrop-filter: blur(10px);
+}
+.hover\:bg-glass-hover:hover {
+  background: hsl(0 0% 100% / 0.45);
 }
 </style>

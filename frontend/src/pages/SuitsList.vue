@@ -359,17 +359,23 @@ function showToast(t) {
   --shadow-1: 0 rgba(255, 255, 255, 1);
 }
 
-html,body,#case-app { height: 100%; }
-body { margin: 0; font-family: Inter, 'Cairo', system-ui, -apple-system, Segoe UI, Roboto, Arial; color: var(--txt); background: white; }
-
+html,body,#case-app { height: 100%; background: var(--glass);}
+body { margin: 0; font-family: Inter, 'Cairo', system-ui, -apple-system, Segoe UI, Roboto, Arial; color: var(--txt); background: var(--glass) !important;}
+.bg-surface-white {
+  background: var(--glass);
+}
 /* app layout */
 .app-root { min-height: 100vh; padding: 20px; grid-template-columns: 1fr; gap: 18px; }
 .header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px; border-radius:16px; }
-.card { box-shadow: none !important;background: var(--glass); border:1px solid var(--glass-border); border-radius:12px;  backdrop-filter: blur(8px); }
+.card { box-shadow: none !important; background: linear-gradient(
+    135deg,
+    hsl(var(--h) 70% 60% / 0.25),
+    hsl(var(--h) 70% 45% / 0.25)
+  ); border:1px solid var(--glass-border); border-radius:12px;  backdrop-filter: blur(8px); }
 .brand { display:flex; align-items:center; gap:12px; }
 .logo { width:48px; height:48px; border-radius:12px; background: linear-gradient(135deg, hsl(var(--h) var(--s) calc(var(--l) + 6%)), hsl(calc(var(--h) - 25) 85% 58%)); }
 .brand-title { font-weight:900; font-size:1rem }
-.brand-sub { opacity:.75; font-size:0.85rem }
+.brand-sub { opacity:.75; font-size:1.5rem }
 
 .toolbar { display:flex; align-items:center; gap:12px; }
 .search { height: 40px; display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:999px; border:1px solid var(--glass-border); background: hsl(0 0% 100% /.6); min-width:260px; }
