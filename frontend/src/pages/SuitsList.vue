@@ -340,6 +340,8 @@ function showToast(t) {
 </script>
 
 <style scoped>
+/* Import Amiri font from Google */
+@import url('https://fonts.googleapis.com/earlyaccess/amiri.css');
 /* THEME TOKENS */
 :root {
   --h: 266;
@@ -359,8 +361,8 @@ function showToast(t) {
   --shadow-1: 0 rgba(255, 255, 255, 1);
 }
 
-html,body,#case-app { height: 100%; background: var(--glass);}
-body { margin: 0; font-family: Inter, 'Cairo', system-ui, -apple-system, Segoe UI, Roboto, Arial; color: var(--txt); background: var(--glass) !important;}
+html,body,#case-app { height: 100%; background: var(--glass); font-family: 'Amiri', serif !important;}
+body { margin: 0; font-family: 'Amiri', serif !important; color: var(--txt); background: var(--glass) !important;}
 .bg-surface-white {
   background: var(--glass);
 }
@@ -402,7 +404,8 @@ body { margin: 0; font-family: Inter, 'Cairo', system-ui, -apple-system, Segoe U
 .form-grid .grid { display:grid; grid-template-columns: repeat(2,1fr); gap:12px }
 .field { display:flex; flex-direction:column; gap:6px }
 .field label { font-weight:700; text-align: right }
-.field input, .field select { padding:8px; border:1px solid rgba(0,0,0,0.08); border-radius:8px; background: linear-gradient(135deg,hsl(var(--h) var(--s) calc(var(--l) + 2%)),hsl(var(--h) var(--s) calc(var(--l) - 10%))); }
+.field input, .field select { padding:8px; border:1px solid rgba(0,0,0,0.08); border-radius:8px; background: white  }
+:root.dark .field input, .field select { color : black; }
 .form-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:14px }
 
 .table-panel { padding:0 }
