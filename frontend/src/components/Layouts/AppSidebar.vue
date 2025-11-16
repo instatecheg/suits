@@ -81,9 +81,7 @@
 
 
 <style scoped>
-.bg-surface-white {
-  background:  none !important;
-}
+
 /* Import Amiri font from Google */
 @import url('https://fonts.googleapis.com/earlyaccess/amiri.css');
 

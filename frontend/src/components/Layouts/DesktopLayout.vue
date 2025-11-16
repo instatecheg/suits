@@ -1,15 +1,16 @@
 <template>
   <div class="flex h-screen w-screen">
-    <div class="h-full border-r bg-surface-menu-bar">
+    <div class="h-full border-r">
       <AppSidebar />
     </div>
-    <div class="flex-1 flex flex-col h-full overflow-auto bg-surface-white">
+    <div class="flex-1 flex flex-col h-full overflow-auto">
       <AppHeader />
       <slot />
     </div>
     <GlobalModals />
   </div>
 </template>
+
 <script setup>
 import AppSidebar from '@/components/Layouts/AppSidebar.vue'
 import AppHeader from '@/components/Layouts/AppHeader.vue'
