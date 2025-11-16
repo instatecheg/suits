@@ -366,9 +366,7 @@ function showToast(t) {
 
 html,body,#case-app { height: 100%; background: var(--glass); font-family: 'Amiri', serif !important;}
 body { margin: 0; font-family: 'Amiri', serif !important; color: var(--txt); background: var(--glass) !important;}
-.bg-surface-white {
-  background: var(--glass);
-}
+
 /* app layout */
 .app-root { min-height: 100vh; padding: 20px; grid-template-columns: 1fr; gap: 18px; }
 .header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px; border-radius:16px; }
