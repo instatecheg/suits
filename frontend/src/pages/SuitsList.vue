@@ -122,12 +122,12 @@
 
             <div class="field">
               <label>الأولوية</label>
-              <select v-model="newSuits.priority">
-                <option value="">-- اختر --</option>
-                <option value="high">عالية</option>
-                <option value="medium">متوسطة</option>
-                <option value="low">منخفضة</option>
-              </select>
+              <select v-model="newSuits.priority" required>
+              <option value="">إختر الأولوية</option>
+              <option value="عالية">عالية</option>
+              <option value="متوسطة">متوسطة</option>
+              <option value="منخفضة">منخفضة</option>
+            </select>
             </div>
           </div>
 
@@ -340,6 +340,9 @@ function showToast(t) {
 </script>
 
 <style scoped>
+.bg-surface-white {
+  background-color: none !important;
+}
 /* Import Amiri font from Google */
 @import url('https://fonts.googleapis.com/earlyaccess/amiri.css');
 /* THEME TOKENS */

@@ -1,108 +1,207 @@
 <template>
-  <div class="p-6 bg-surface-white min-h-screen">
-    <!-- Top Row: Tasks / Meetings / Reminders -->
+  <div class="dashboard-wrapper p-6 min-h-screen">
+
+    <!-- Top Row -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-      <!-- 📝 Tasks Card -->
-      <div class="bg-white border-2 border-blue-500 rounded-2xl shadow-sm overflow-hidden">
-        <div class="flex justify-between items-center bg-blue-50 p-4 border-b border-blue-200">
-          <h2 class="font-bold text-lg text-blue-700">مهماتي لهذا اليوم</h2>
-          <span class="bg-blue-600 text-white text-sm px-3 py-1 rounded-full">0</span>
+
+      <!-- 📝 Tasks -->
+      <div class="card overflow-hidden">
+        <div class="header-row">
+          <h2>مهماتي لهذا اليوم</h2>
+          <span class="badge">0</span>
         </div>
-        <div class="p-6 flex flex-col items-center justify-center text-center h-72">
-          <img :src="getImage('task-list-image.svg')" alt="tasks" class="w-24 mb-4" />
-          <h6 class="font-semibold text-gray-700 mb-4">
-            لم يتم تعيين مهام لهذا اليوم
-          </h6>
-          <button
-            class="bg-blue-600 text-white font-medium px-5 py-2 rounded-md hover:bg-blue-700 transition"
-            @click="addNewTask"
-          >
+
+        <div class="card-body">
+          <img :src="getImage('task-list-image.svg')" class="w-24 mb-4" />
+          <h6 class="empty-text">لم يتم تعيين مهام لهذا اليوم</h6>
+
+          <button class="btn" @click="addNewTask">
             + إنشاء مهمة
           </button>
         </div>
-        <div
-          class="p-4 border-t border-blue-100 text-blue-600 text-sm font-medium flex items-center justify-center gap-2 cursor-pointer hover:text-blue-800 transition"
-        >
+
+        <div class="footer-row">
           <i class="fa-solid fa-circle-arrow-left"></i>
           <a href="https://site.app4legal.com/6717/tasks/my_tasks">انتقل إلى المهام</a>
         </div>
       </div>
 
-      <!-- 👥 Meetings Card -->
-      <div class="bg-white border-2 border-blue-500 rounded-2xl shadow-sm overflow-hidden">
-        <div class="flex justify-between items-center bg-blue-50 p-4 border-b border-blue-200">
-          <h2 class="font-bold text-lg text-blue-700">اجتماعاتي لهذا اليوم</h2>
-          <span class="bg-blue-600 text-white text-sm px-3 py-1 rounded-full">0</span>
+      <!-- 👥 Meetings -->
+      <div class="card overflow-hidden">
+        <div class="header-row">
+          <h2>اجتماعاتي لهذا اليوم</h2>
+          <span class="badge">0</span>
         </div>
-        <div class="p-6 flex flex-col items-center justify-center text-center h-72">
-          <img :src="getImage('meeting-list-image.svg')" alt="meetings" class="w-24 mb-4" />
-          <h6 class="font-semibold text-gray-700 mb-4">
-            لا توجد اجتماعات مقررة لهذا اليوم
-          </h6>
-          <button
-            class="bg-blue-600 text-white font-medium px-5 py-2 rounded-md hover:bg-blue-700 transition"
-            @click="meetingForm"
-          >
-            + جدولة اجتماع
-          </button>
+
+        <div class="card-body">
+          <img :src="getImage('meeting-list-image.svg')" class="w-24 mb-4" />
+          <h6 class="empty-text">لا توجد اجتماعات مقررة لهذا اليوم</h6>
+          <button class="btn" @click="meetingForm">+ جدولة اجتماع</button>
         </div>
-        <div
-          class="p-4 border-t border-blue-100 text-blue-600 text-sm font-medium flex items-center justify-center gap-2 cursor-pointer hover:text-blue-800 transition"
-        >
+
+        <div class="footer-row">
           <i class="fa-solid fa-circle-arrow-left"></i>
-          <a href="https://site.app4legal.com/6717/calendars/my_calendar?active_module=calendar">
-            انتقل إلى التقويم
-          </a>
+          <a href="https://site.app4legal.com/6717/calendars/my_calendar?active_module=calendar">انتقل إلى التقويم</a>
         </div>
       </div>
 
-      <!-- ⏰ Reminders Card -->
-      <div class="bg-white border-2 border-blue-500 rounded-2xl shadow-sm overflow-hidden">
-        <div class="flex justify-between items-center bg-blue-50 p-4 border-b border-blue-200">
-          <h2 class="font-bold text-lg text-blue-700">تذكيراتي لهذا اليوم</h2>
-          <span class="bg-blue-600 text-white text-sm px-3 py-1 rounded-full">0</span>
+      <!-- ⏰ Reminders -->
+      <div class="card overflow-hidden">
+        <div class="header-row">
+          <h2>تذكيراتي لهذا اليوم</h2>
+          <span class="badge">0</span>
         </div>
-        <div class="p-6 flex flex-col items-center justify-center text-center h-72">
-          <img :src="getImage('reminder-list-image.svg')" alt="reminders" class="w-24 mb-4" />
-          <h6 class="font-semibold text-gray-700 mb-4">
-            لم يتم تعيين تذكيرات لهذا اليوم
-          </h6>
-          <button
-            class="bg-blue-600 text-white font-medium px-5 py-2 rounded-md hover:bg-blue-700 transition"
-            @click="reminderForm"
-          >
-            + أضف تذكير
-          </button>
+
+        <div class="card-body">
+          <img :src="getImage('reminder-list-image.svg')" class="w-24 mb-4" />
+          <h6 class="empty-text">لم يتم تعيين تذكيرات لهذا اليوم</h6>
+          <button class="btn" @click="reminderForm">+ أضف تذكير</button>
         </div>
-        <div
-          class="p-4 border-t border-blue-100 text-blue-600 text-sm font-medium flex items-center justify-center gap-2 cursor-pointer hover:text-blue-800 transition"
-        >
+
+        <div class="footer-row">
           <i class="fa-solid fa-circle-arrow-left"></i>
-          <a href="https://site.app4legal.com/6717/reminders/show_my_reminders">
-            انتقل إلى التذكيرات
-          </a>
+          <a href="https://site.app4legal.com/6717/reminders/show_my_reminders">انتقل إلى التذكيرات</a>
         </div>
       </div>
+
     </div>
 
-    <!-- Bottom Row: My Cases / My Clients / My Documents -->
+    <!-- Bottom Stats -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div
         v-for="item in dashboardStats"
         :key="item.label"
-        class="bg-white border-2 border-blue-500 rounded-2xl shadow-sm overflow-hidden flex flex-col items-center justify-center p-8 hover:shadow-md transition"
+        class="card flex flex-col items-center justify-center p-8 hover:shadow-lg transition"
       >
-        <div class="bg-blue-100 text-blue-700 p-4 rounded-full mb-4">
+        <div class="icon-bubble">
           <component :is="item.icon" class="w-8 h-8" />
         </div>
-        <h3 class="text-blue-700 font-bold text-lg mb-1">{{ item.label }}</h3>
-        <p class="text-gray-600 text-sm mb-3">{{ item.subtitle }}</p>
-        <span class="text-3xl font-extrabold text-blue-600">{{ item.count }}</span>
+
+        <h3 class="stat-title">{{ item.label }}</h3>
+        <p class="stat-subtitle">{{ item.subtitle }}</p>
+        <span class="stat-count">{{ item.count }}</span>
       </div>
     </div>
+
   </div>
 </template>
 
+<style scoped>
+
+
+/* Import Amiri font from Google */
+@import url('https://fonts.googleapis.com/earlyaccess/amiri.css');
+.dashboard-wrapper {
+  font-family: 'Amiri', serif !important;
+  color: var(--txt);
+
+  /* dreamy gradient */
+  background:
+    radial-gradient(800px 600px at 10% 10%, hsl(calc(var(--h) + 30) 90% 22%/.35), transparent 60%),
+    radial-gradient(900px 700px at 90% 10%, hsl(calc(var(--h) - 20) 90% 30%/.25), transparent 60%),
+    radial-gradient(900px 900px at 90% 90%, hsl(calc(var(--h) + 60) 90% 25%/.28), transparent 55%),
+    var(--bg-1);
+}
+
+/* Glass cards */
+.card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  box-shadow: var(--shadow-1);
+  backdrop-filter: blur(10px);
+}
+
+/* Header inside card */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: hsl(0 0% 100%/.25);
+  padding: 16px;
+  border-bottom: 1px solid var(--glass-border);
+}
+.header-row h2 {
+  margin: 0;
+  font-weight: 900;
+  font-size: 1.2rem;
+}
+
+/* Badge */
+.badge {
+  background: hsl(var(--h) var(--s) var(--l));
+  color: white;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: .8rem;
+  font-weight: bold;
+}
+
+/* Card body */
+.card-body {
+  padding: 30px;
+  text-align: center;
+}
+.empty-text {
+  color: var(--txt);
+  opacity: .85;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+/* Footer */
+.footer-row {
+  border-top: 1px solid var(--glass-border);
+  padding: 14px;
+  text-align: center;
+  color: hsl(var(--h) 60% 55%);
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  font-weight: 800;
+  border: 0;
+  border-radius: 12px;
+  color: white;
+  background: linear-gradient(
+    135deg,
+    hsl(var(--h) var(--s) calc(var(--l) + 2%)),
+    hsl(var(--h) var(--s) calc(var(--l) - 10%))
+  );
+  box-shadow: 0 12px 26px hsl(var(--h) var(--s) 40%/.35);
+  cursor: pointer;
+}
+
+/* Stats */
+.icon-bubble {
+  background: hsl(0 0% 100%/.28);
+  border: 1px solid var(--glass-border);
+  border-radius: 50%;
+  padding: 18px;
+  margin-bottom: 12px;
+}
+.stat-title {
+  font-weight: 900;
+  font-size: 1.4rem;
+  margin-bottom: 4px;
+}
+.stat-subtitle {
+  opacity: .75;
+  margin-bottom: 12px;
+}
+.stat-count {
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: hsl(var(--h) var(--s) var(--l));
+}
+</style>
 <script setup>
 import { Briefcase, Users, FileText } from 'lucide-vue-next'
 import { ref, reactive, computed, onMounted } from 'vue';
