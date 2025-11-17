@@ -83,11 +83,11 @@
 <style scoped>
 
 /* Import Amiri font from Google */
-@import url('https://fonts.googleapis.com/earlyaccess/amiri.css');
+@import url(https://fonts.googleapis.com/earlyaccess/droidarabickufi.css);
 
 /* Force Amiri font globally */
 html, body, #case-app, icon-wrap, profile{
-  font-family: 'Amiri', serif !important;
+  font-family: 'Droid Arabic Kufi', sans-serif !important;
 }
 /* ===== GLASS SIDEBAR ===== */
 .sidebar {
@@ -106,7 +106,7 @@ html, body, #case-app, icon-wrap, profile{
   -webkit-backdrop-filter: blur(10px);
   overflow: hidden;
   transition: all 0.3s ease-in-out;
-  font-family: 'Amiri', serif !important;
+  font-family: 'Droid Arabic Kufi', sans-serif !important;
 }
 :root.dark .sidebar {
   background:hsl(230 28% 12%/.45);
@@ -127,13 +127,13 @@ html, body, #case-app, icon-wrap, profile{
   );
   border-bottom: 1px solid var(--glass-border);
   gap: 1px;
-  font-family: 'Amiri', serif !important;
+  font-family: 'Droid Arabic Kufi', sans-serif !important;
 }
 
 /* ===== NAVIGATION ===== */
 .nav { display: grid; gap: 12px; padding: 16px; overflow-y: auto; }
 .nav-section + .nav-section { margin-top: 1rem; }
-.section-label {font-family: 'Amiri', serif !important;  font-size: 0.8rem; font-weight: 900; color: hsl(var(--h) 80% 75%); text-transform: uppercase; margin-bottom: 6px; }
+.section-label {font-family: 'Droid Arabic Kufi', sans-serif !important; font-size: 0.8rem; font-weight: 900; color: hsl(var(--h) 80% 75%); text-transform: uppercase; margin-bottom: 6px; }
 .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 12px; padding: 16px 12px; width: 100%; cursor: pointer; background: none !important; transition: transform 0.15s ease, background 0.2s ease; margin-bottom: 10px; }
 :root.dark .nav-item { background: hsl(0 0% 100% / 0.06); }
 .nav-item:hover { transform: translateY(-1px); background: linear-gradient(135deg, hsl(var(--h) 70% 60% / 0.25), hsl(var(--h) 70% 45% / 0.25)); }
@@ -160,7 +160,7 @@ html, body, #case-app, icon-wrap, profile{
 .nav-icon-only:hover { transform: scale(1.1); }
 
 /* ===== FOOTER TOGGLE ===== */
-.sidebar-footer { font-family: 'Amiri', serif !important; padding: 14px; display: flex; justify-content: center; border-top: 1px solid var(--glass-border); }
+.sidebar-footer { font-family: 'Droid Arabic Kufi', sans-serif !important; padding: 14px; display: flex; justify-content: center; border-top: 1px solid var(--glass-border); }
 .toggle-btn { display: inline-flex; align-items: center; gap: 8px; border: 0; background: transparent; color: hsl(var(--h) 80% 70%); font-weight: 800; cursor: pointer; transition: color 0.2s ease; }
 .toggle-btn:hover { color: hsl(var(--h) 85% 75%); }
 .toggle-icon { width: 20px; height: 20px; transition: transform 0.3s ease; }

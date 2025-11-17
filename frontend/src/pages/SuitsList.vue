@@ -142,7 +142,77 @@
               <input v-model="newSuits.opponent_role" type="text" />
             </div>
           </div>
+          <div v-else-if="activeTab === 'الحقول المخصصة' " class="grid">
+            <div class="field">
+              <label>سياسة الدعوى </label>
+              <input type="text" />
+            </div>
+          </div>
 
+          <div v-else-if="activeTab === 'التعرفة لكل ساعة' " class="grid">
+            <div class="field">
+              <label>إسم الهيئة </label>
+              <select  required>
+          <option value="">إختر إسم الهيئة </option>
+          <option value="شركة إياد البكري وأثير قربان للمحاماة والاستشارات القانونية">شركة إياد البكري وأثير قربان للمحاماة والاستشارات القانونية</option>
+        </select>
+            </div>
+            <div class="field">
+              <label> التعرفة</label>
+              <input type="text" />
+            </div>
+          </div>
+
+          <div v-else-if="activeTab === 'المزيد من التفاصيل' " class="grid">
+            <div class="field">
+              <label>مرحلة الدعوى</label>
+
+              <select  required>
+          <option value="">حدد اختيار </option>
+          <option value="الابتدائية">الابتدائية</option>
+          <option value="الاستئناف">الاستئناف</option>
+          <option value="العليا">العليا</option>
+        </select>
+            </div>
+            
+          </div>
+
+          <div v-else-if="activeTab === 'التواريخ والوقت' " class="grid">
+            <div class="field">
+              <label>تاريخ التأسيس</label>
+              <input  type="date" />
+            </div>
+            <div class="field">
+              <label>تاريخ الإستحقاق </label>
+              <input  type="date" />
+            </div>
+            <div class="field">
+             <label>المدة المُقدّرة</label>
+              <input type="date" />
+            </div>
+          </div>
+
+
+          <div v-else-if="activeTab === 'الأشخاص المعنيين' " class="grid">
+            <div class="field">
+              <label> أحيلت عبر </label>
+              <input type="text" />
+            </div>
+            <div class="field">
+              <label> طُلبت من قبل </label>
+              <input type="text" />
+            </div>
+            <div class="field">
+              <label> الفريق المكلف </label>
+              <select  required>
+          <option value="   أعضاء المكتب    ">أعضاء المكتب</option>
+        </select>
+            </div>
+            <div class="field">
+              <label> المكلف </label>
+              <input type="text" />
+            </div>
+          </div>
           <!-- Form actions -->
           <div class="form-actions">
             <button type="button" @click="resetSuitsForm" class="btn-ghost">
@@ -344,7 +414,7 @@ function showToast(t) {
   background-color: none !important;
 }
 /* Import Amiri font from Google */
-@import url('https://fonts.googleapis.com/earlyaccess/amiri.css');
+@import url(https://fonts.googleapis.com/earlyaccess/droidarabickufi.css);
 /* THEME TOKENS */
 :root {
   --h: 266;
@@ -364,8 +434,8 @@ function showToast(t) {
   --shadow-1: 0 rgba(255, 255, 255, 1);
 }
 
-html,body,#case-app { height: 100%; background: var(--glass); font-family: 'Amiri', serif !important;}
-body { margin: 0; font-family: 'Amiri', serif !important; color: var(--txt); background: var(--glass) !important;}
+html,body,#case-app { height: 100%; background: var(--glass);font-family: 'Droid Arabic Kufi', sans-serif !important;}
+body { margin: 0; font-family: 'Droid Arabic Kufi', sans-serif !important; color: var(--txt); background: var(--glass) !important;}
 .bg-surface-white {
   background: var(--glass);
 }
