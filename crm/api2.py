@@ -35,3 +35,64 @@ def create_Suits(**kwargs):
     except Exception as e:
         frappe.log_error(frappe.get_traceback(), _("Failed to create Suit"))
         frappe.throw(_("Failed to create Suit. Error: {0}").format(str(e)))
+
+@frappe.whitelist()
+def delete_suit(name):
+    try:
+        # Check if the document exists before trying to delete it
+        if frappe.db.exists(" Suits", name):
+            # Delete the document using the frappe.delete_doc method
+            frappe.delete_doc("Suits", name)
+            
+            # Commit the changes to the database
+            frappe.db.commit()
+            
+            # Return a success message
+            return {"message": "تم حذف الرحلة بنجاح"}
+        else:
+            # Handle the case where the document is not found
+            return {"error": "لم يتم العثور على الرحلة بهذا الاسم"}
+
+    except Exception as e:
+        # Log the full traceback for debugging purposes
+        frappe.log_error(frappe.get_traceback(), "Error in delete_delivery_trip")
+        
+        # Return a user-friendly error message
+        return {"error": f"فشل حذف الرحلة: {str(e)}"}
+# crm/api2.py
+
+import frappe
+from frappe import _
+
+@frappe.whitelist()
+def get_suit(name):
+    """
+    Fetch a suit by its system name (ID).
+    """
+    if not name:
+        frappe.throw(_("Suit ID is required"))
+
+    suit = frappe.get_doc("Suits", name)
+    return suit.as_dict()
+
+
+@frappe.whitelist()
+def update_suit(**kwargs):
+    """
+    Update an existing suit with new data from frontend.
+    Expects all fields in kwargs.
+    """
+    name = kwargs.get("name")
+    if not name:
+        frappe.throw(_("Suit ID is required"))
+
+    suit = frappe.get_doc("Suits", name)
+
+    # Update all passed fields, including name1
+    for key, value in kwargs.items():
+        if key != "name" and hasattr(suit, key):
+            setattr(suit, key, value)
+
+    suit.save()
+    frappe.db.commit()
+    return {"message": _("Suit updated successfully")}

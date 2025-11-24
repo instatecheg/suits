@@ -61,27 +61,30 @@
     </nav>
 
     <!-- Collapse Button -->
-    <div class="sidebar-footer">
-      <button
-        class="toggle-btn"
-        @click="isSidebarCollapsed = !isSidebarCollapsed"
-      >
-        <CollapseSidebar
-          class="toggle-icon"
-          :class="{ rotated: isSidebarCollapsed }"
-        />
-        <span v-if="!isSidebarCollapsed">
-          {{ isSidebarCollapsed ? __('Expand') : __('Collapse') }}
-        </span>
-      </button>
-    </div>
+<!-- Collapse Button -->
+<div class="sidebar-footer">
+  <button
+    class="toggle-btn"
+    @click="isSidebarCollapsed = !isSidebarCollapsed"
+  >
+    <img
+      src="@/assets/setup-dots_16139.png"
+      alt="dots"
+      class="dots-img"
+    />
+  </button>
+</div>
+
   </div>
 </template>
 
 
 
 <style scoped>
-
+.dots-img {
+  width: 24px; /* adjust size as needed */
+  height: 24px;
+}
 /* Import Amiri font from Google */
 @import url(https://fonts.googleapis.com/earlyaccess/droidarabickufi.css);
 

@@ -24,6 +24,8 @@ import {
   FeatherIcon,
 } from 'frappe-ui'
 
+window.frappe = window.frappe || {};
+
 let globalComponents = {
   Button,
   TextInput,

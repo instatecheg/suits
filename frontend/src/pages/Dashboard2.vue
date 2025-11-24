@@ -12,7 +12,7 @@
         </div>
 
         <div class="card-body">
-          <img :src="getImage('task-list-image.svg')" class="w-24 mb-4" />
+          <img :src="TasksImg" class="w-24 mb-4" />
           <h6 class="empty-text">لم يتم تعيين مهام لهذا اليوم</h6>
 
           <button class="btn" @click="addNewTask">
@@ -34,7 +34,7 @@
         </div>
 
         <div class="card-body">
-          <img :src="getImage('meeting-list-image.svg')" class="w-24 mb-4" />
+          <img :src="MeetingsImg" class="w-24 mb-4" />
           <h6 class="empty-text">لا توجد اجتماعات مقررة لهذا اليوم</h6>
           <button class="btn" @click="meetingForm">+ جدولة اجتماع</button>
         </div>
@@ -53,7 +53,7 @@
         </div>
 
         <div class="card-body">
-          <img :src="getImage('reminder-list-image.svg')" class="w-24 mb-4" />
+          <img :src="RemindersImg" class="w-24 mb-4" />
           <h6 class="empty-text">لم يتم تعيين تذكيرات لهذا اليوم</h6>
           <button class="btn" @click="reminderForm">+ أضف تذكير</button>
         </div>
@@ -89,10 +89,18 @@
 <style scoped>
 
 
-/* Import Amiri font from Google */
-@import url('https://fonts.googleapis.com/earlyaccess/amiri.css');
+@import url(https://fonts.googleapis.com/earlyaccess/droidarabickufi.css);
+html,body,#case-app { 
+  height: 100%; 
+  background: var(--glass);
+  font-family: 'Droid Arabic Kufi', sans-serif !important;
+}
+
+.bg-surface-white {
+  background-color: #f8fafc;
+}
 .dashboard-wrapper {
-  font-family: 'Amiri', serif !important;
+font-family: 'Droid Arabic Kufi', sans-serif !important;
   color: var(--txt);
 
   /* dreamy gradient */
@@ -137,11 +145,17 @@
   font-weight: bold;
 }
 
-/* Card body */
 .card-body {
   padding: 30px;
   text-align: center;
-}
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+} 
+
 .empty-text {
   color: var(--txt);
   opacity: .85;
@@ -202,24 +216,22 @@
   color: hsl(var(--h) var(--s) var(--l));
 }
 </style>
+
 <script setup>
-import { Briefcase, Users, FileText } from 'lucide-vue-next'
+import { Briefcase, Users, FileText } from 'lucide-vue-next';
 import { ref, reactive, computed, onMounted } from 'vue';
 import { createResource } from 'frappe-ui';
+
+// Import user images
+import TasksImg from '/home/frappe/frappe-bench/apps/crm/frontend/src/assets/notes_13008973.png'
+import MeetingsImg from '/home/frappe/frappe-bench/apps/crm/frontend/src/assets/board-directors_11934104.png'
+import RemindersImg from '/home/frappe/frappe-bench/apps/crm/frontend/src/assets/notes_15747285.png'
+
 const dashboardStats = [
   { label: 'قضاياي', subtitle: 'إجمالي القضايا النشطة', count: 0, icon: Briefcase },
   { label: 'عملائي', subtitle: 'عدد العملاء المسجلين', count: 0, icon: Users },
   { label: 'مستنداتي', subtitle: 'عدد المستندات المرفوعة', count: 0, icon: FileText },
 ]
-
-function getImage(name) {
-  try {
-    return new URL(`/src/assets/images/getting_started/${name}`, import.meta.url).href
-  } catch {
-    // Fallback to placeholder if image missing
-    return 'https://via.placeholder.com/100x100?text=No+Image'
-  }
-}
 
 function addNewTask() {
   console.log('Add new task clicked')
@@ -232,8 +244,3 @@ function reminderForm() {
 }
 </script>
 
-<style scoped>
-.bg-surface-white {
-  background-color: #f8fafc;
-}
-</style>

@@ -14,10 +14,21 @@ const routes = [
     component: () => import('@/pages/MobileNotification.vue'),
   },
   {
+    path: '/login',
+    name: 'login',
+    component: () => import('@/components/login.vue'),
+    meta: { noSidebar: true }
+  },
+  {
     path: '/suits',
     name: 'Suits',
     component: () => import('@/pages/SuitsList.vue'),
   },
+  {
+  path: '/suits/:id',
+  name: 'SuitsPage',
+  component: () => import('@/pages/SuitsPage.vue')
+},
   {
     path: '/dashboard',
     name: 'Dashboard',

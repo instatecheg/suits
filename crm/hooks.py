@@ -21,6 +21,9 @@ add_to_apps_screen = [
 		"has_permission": "crm.api.check_app_permission",
 	}
 ]
+app_include_js = [
+    "/assets/crm/css/login_custom.js"
+]
 
 # Includes in <head>
 # ------------------
