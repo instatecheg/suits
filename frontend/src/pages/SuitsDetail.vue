@@ -1,23 +1,31 @@
 <template>
-  <section class="suit-page" :dir="rtl ? 'rtl' : 'ltr'">
+  <section v-if="Object.keys(suitData).length" class="suit-page" :dir="rtl ? 'rtl' : 'ltr'">
     <h1>{{ rtl ? 'تعديل الدعوى' : 'Edit Suit' }}</h1>
+
+    <!-- Breadcrumbs -->
+    <nav class="breadcrumbs">
+      <span v-for="(crumb, index) in breadcrumbs" :key="index">
+        <router-link :to="crumb.route">{{ crumb.label }}</router-link>
+        <span v-if="index < breadcrumbs.length - 1"> / </span>
+      </span>
+    </nav>
 
     <form @submit.prevent="updateSuit" class="form-grid">
       <!-- Tab navigation -->
       <div class="tabs">
         <button
-          v-for="tab in tabs"
-          :key="tab"
-          :class="{ active: activeTab === tab }"
+          v-for="(tab, index) in tabObjects"
+          :key="tab.name"
+          :class="{ active: tabIndex === index }"
           type="button"
-          @click="activeTab = tab"
+          @click="changeTabTo(index)"
         >
-          {{ tab }}
+          {{ tab.label }}
         </button>
       </div>
 
-      <!-- Tab content -->
-      <div v-if="activeTab === 'معلومات عامة'" class="grid">
+      <!-- Tab content: General Info -->
+      <div v-if="tabIndex === 0" class="grid">
         <div class="field">
           <label>اسم الدعوى</label>
           <input v-model="suitData.name1" type="text" required />
@@ -102,13 +110,16 @@
         </div>
       </div>
 
-      <!-- Other tabs: replicate as needed -->
-      <div v-if="activeTab === 'خصم'" class="grid">
+      <!-- Tab content: Opponent -->
+      <div v-if="tabIndex === 1" class="grid">
         <div class="field">
           <label>إسم الخصم</label>
           <input v-model="suitData.opponent" type="text" />
         </div>
-        <!-- Add more fields here for this tab -->
+        <div class="field">
+          <label>صفة الخصم</label>
+          <input v-model="suitData.opponent_role" type="text" />
+        </div>
       </div>
 
       <!-- Form actions -->
@@ -123,103 +134,119 @@
           <i v-else class="fas fa-save"></i>
           {{ isUpdating ? (rtl ? 'جاري الحفظ...' : 'Saving...') : (rtl ? 'حفظ التغييرات' : 'Save Changes') }}
         </button>
+
+        <button type="button" @click="deleteSuit" class="btn btn-red">
+          <i class="fas fa-trash"></i>
+          {{ rtl ? 'حذف الدعوى' : 'Delete Suit' }}
+        </button>
       </div>
     </form>
   </section>
 </template>
 
-<script>
-import { ref, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
+<script setup>
+import { ref, reactive, onMounted, nextTick, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { createResource, toast } from 'frappe-ui'
 
-export default {
-  name: "SuitPage",
-  setup() {
-    const route = useRoute();
-    const router = useRouter();
+const route = useRoute()
+const router = useRouter()
+const rtl = ref(true)
 
-    const rtl = ref(true);
-    const tabs = ref(["معلومات عامة", "خصم"]);
-    const activeTab = ref("معلومات عامة");
+const tabObjects = [
+  { name: 'general', label: 'معلومات عامة' },
+  { name: 'opponent', label: 'خصوم' }
+]
+const tabIndex = ref(0)
+const changeTabTo = (index) => (tabIndex.value = index)
 
-    const suitData = ref({});
-    const isUpdating = ref(false);
+const suitData = reactive({})
+const isUpdating = ref(false)
 
-    // Load suit using field "name1"
-    const fetchSuit = async () => {
-      const suitId = route.params.id;
+const title = computed(() => suitData.name1 || route.params.id)
+const breadcrumbs = computed(() => [
+  { label: 'Suits', route: { name: 'SuitsList' } },
+  { label: title.value, route: { name: 'SuitDetail', params: { id: route.params.id } } }
+])
 
-      const res = await frappe.call({
-        method: "crm.api2.get_suit",
-        args: { name1: suitId }     // ✔ Correct field name
-      });
+const fetchSuit = async (id) => {
+  const resource = createResource({
+    url: 'crm.api2.get_suit',
+    params: { name: id },
+    onSuccess(data) {
+      Object.assign(suitData, data)
+    },
+    onError(err) {
+      console.error(err)
+      toast.error(rtl.value ? 'حدث خطأ أثناء جلب الدعوى' : 'Error fetching suit')
+    }
+  })
+  await resource.fetch()
+}
 
-      suitData.value = res.message || {};
-    };
-
-    // Update suit
-    const updateSuit = async () => {
-      isUpdating.value = true;
-      try {
-        await frappe.call({
-          method: "crm.api2.update_suit",
-          args: suitData.value      // ✔ Sends full data back to backend
-        });
-
-        alert(rtl.value ? "تم تحديث الدعوى!" : "Suit updated!");
-      } catch (err) {
-        console.error(err);
-        alert(rtl.value ? "حدث خطأ أثناء الحفظ" : "Error saving suit");
-      } finally {
-        isUpdating.value = false;
+const updateSuit = async () => {
+  isUpdating.value = true
+  try {
+    const resource = createResource({
+      url: 'crm.api2.update_suit',
+      params: { ...suitData },
+      onSuccess() {
+        toast.success(rtl.value ? 'تم تحديث الدعوى!' : 'Suit updated!')
+        nextTick(() => router.back())
+      },
+      onError(err) {
+        console.error(err)
+        toast.error(rtl.value ? 'حدث خطأ أثناء الحفظ' : 'Error saving suit')
       }
-    };
-
-    const goBack = () => {
-      router.back();
-    };
-
-    onMounted(fetchSuit);
-
-    return {
-      rtl,
-      tabs,
-      activeTab,
-      suitData,
-      isUpdating,
-      updateSuit,
-      goBack
-    };
+    })
+    await resource.fetch()
+  } finally {
+    isUpdating.value = false
   }
-};
+}
+
+const goBack = () => router.back()
+
+const deleteSuit = async () => {
+  if (!confirm(rtl.value ? 'هل أنت متأكد من الحذف؟' : 'Are you sure?')) return;
+
+  try {
+    const resource = createResource({
+      url: 'crm.api2.delete_suit',
+      params: { name: suitData.name },
+      onSuccess: (res) => {
+        if (res.error) {
+          toast.error(res.error);
+          return;
+        }
+        toast.success(res.message);
+        router.back();
+      },
+      onError: (err) => {
+        console.error(err);
+        toast.error(rtl.value ? 'حدث خطأ أثناء الحذف' : 'Error deleting suit');
+      }
+    });
+    await resource.fetch();
+  } catch (err) {
+    console.error(err);
+    toast.error(rtl.value ? 'حدث خطأ أثناء الحذف' : 'Error deleting suit');
+  }
+}
+
+onMounted(() => {
+  fetchSuit(route.params.id)
+})
 </script>
 
-
 <style scoped>
-.suit-page {
-  padding: 1rem;
-}
-.form-grid {
-  display: grid;
-  gap: 1rem;
-}
-.field {
-  display: flex;
-  flex-direction: column;
-  color:black;
-}
-.tabs {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-.tabs button.active {
-  font-weight: bold;
-  border-bottom: 2px solid #007bff;
-}
-.form-actions {
-  margin-top: 1rem;
-  display: flex;
-  gap: 1rem;
-}
+.suit-page { padding: 1rem; }
+.form-grid { display: grid; gap: 1rem; }
+.field { display: flex; flex-direction: column; color:black; }
+.tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+.tabs button.active { font-weight: bold; border-bottom: 2px solid #007bff; }
+.form-actions { margin-top: 1rem; display: flex; gap: 1rem; }
+.btn-red { background-color: #e53e3e; color: white; }
+.breadcrumbs { margin-bottom: 1rem; font-size: 0.9rem; }
+.breadcrumbs a { color: #007bff; text-decoration: none; }
 </style>

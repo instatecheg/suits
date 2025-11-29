@@ -1,6 +1,6 @@
 <template>
   <div id="case-app" class="app-root" :dir="rtl ? 'rtl' : 'ltr'">
-    <!-- Top bar (minimal, no sidebar) -->
+    <!-- Top bar -->
     <header class="card header compact">
       <div class="brand">
         <div>
@@ -14,7 +14,7 @@
             <circle cx="11" cy="11" r="7" stroke-width="2" />
             <path d="M20 20l-3.5-3.5" stroke-width="2" />
           </svg>
-          <input v-model="searchQuery" :placeholder="rtl ? 'ابحث في الدعوى...' : 'Search cases…'">
+          <input v-model="searchQuery" :placeholder="rtl ? 'ابحث في الدعوى...' : 'Search cases…'" />
         </div>
 
         <div class="controls-inline">
@@ -37,7 +37,9 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path d="M12 5v14M5 12h14" stroke-width="2" stroke-linecap="round" />
             </svg>
-            <span class="btn-label">{{ rtl ? (showCreateForm ? 'إخفاء النموذج' : 'إضافة دعوى') : (showCreateForm ? 'Hide Form' : 'Add Case') }}</span>
+            <span class="btn-label">
+              {{ rtl ? (showCreateForm ? 'إخفاء النموذج' : 'إضافة دعوى') : (showCreateForm ? 'Hide Form' : 'Add Case') }}
+            </span>
           </button>
         </div>
       </div>
@@ -128,7 +130,7 @@
                 <option value="مستأنف ضده">مستأنف ضده</option>
                 <option value="مصفي الشركة">مصفي الشركة</option>
                 <option value="مصفي تركة">مصفي تركة</option>
-                <option value="مطلوب إدخاله">مطلوب إدخله</option>
+                <option value="مطلوب إدخله">مطلوب إدخله</option>
                 <option value="ملتمس">ملتمس</option>
                 <option value="ملتمس ضده">ملتمس ضده</option>
                 <option value="منفذ ضده">منفذ ضده</option>
@@ -151,7 +153,91 @@
             </div>
           </div>
 
-          <!-- Other tabs omitted for brevity, keep your existing fields -->
+          <!-- Tab: Opponents -->
+          <div v-else-if="activeTab === 'الخصوم'" class="grid">
+            <div class="field">
+              <label>إسم الخصم</label>
+              <input v-model="newSuits.opponent" type="text" />
+            </div>
+            <div class="field">
+              <label>صفة الخصم</label>
+              <input v-model="newSuits.opponent_role" type="text" />
+            </div>
+          </div>
+
+          <!-- Tab: Custom Fields -->
+          <div v-else-if="activeTab === 'الحقول المخصصة'" class="grid">
+            <div class="field">
+              <label>سياسة الدعوى</label>
+              <input type="text" />
+            </div>
+          </div>
+
+          <!-- Tab: Hourly Rate -->
+          <div v-else-if="activeTab === 'التعرفة لكل ساعة'" class="grid">
+            <div class="field">
+              <label>إسم الهيئة</label>
+              <select required>
+                <option value="">إختر إسم الهيئة</option>
+                <option value="شركة إياد البكري وأثير قربان للمحاماة والاستشارات القانونية">شركة إياد البكري وأثير قربان للمحاماة والاستشارات القانونية</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>التعرفة</label>
+              <input type="text" />
+            </div>
+          </div>
+
+          <!-- Tab: More Details -->
+          <div v-else-if="activeTab === 'المزيد من التفاصيل'" class="grid">
+            <div class="field">
+              <label>مرحلة الدعوى</label>
+              <select required>
+                <option value="">حدد اختيار</option>
+                <option value="الابتدائية">الابتدائية</option>
+                <option value="الاستئناف">الاستئناف</option>
+                <option value="العليا">العليا</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Tab: Dates and Time -->
+          <div v-else-if="activeTab === 'التواريخ والوقت'" class="grid">
+            <div class="field">
+              <label>تاريخ التأسيس</label>
+              <input type="date" />
+            </div>
+            <div class="field">
+              <label>تاريخ الإستحقاق</label>
+              <input type="date" />
+            </div>
+            <div class="field">
+              <label>المدة المُقدّرة</label>
+              <input type="date" />
+            </div>
+          </div>
+
+          <!-- Tab: Involved Persons -->
+          <div v-else-if="activeTab === 'الأشخاص المعنيين'" class="grid">
+            <div class="field">
+              <label>أحيلت عبر</label>
+              <input type="text" />
+            </div>
+            <div class="field">
+              <label>طُلبت من قبل</label>
+              <input type="text" />
+            </div>
+            <div class="field">
+              <label>الفريق المكلف</label>
+              <select required>
+                <option value="أعضاء المكتب">أعضاء المكتب</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>المكلف</label>
+              <input type="text" />
+            </div>
+          </div>
 
           <!-- Form actions -->
           <div class="form-actions">
@@ -338,25 +424,52 @@ const viewSuit = (id) => {
 }
 
 const editSuit = (id) => {
-  router.push({ name: "SuitsPage", params: { id } })
+  // 1. Find the suit object
+  const suit = Suits.value.find(s => s.name === id)
+  if (!suit) {
+    showToast(rtl.value ? 'تعذر العثور على الدعوى' : 'Suit not found')
+    return
+  }
+
+  // 2. Build route (same as getRoute logic)
+  const route = {
+    name: 'SuitDetail',   // Make sure you have this route in router
+    params: { id: suit.name }
+  }
+
+  // 3. Optional: any onClick logic
+  console.log('Navigating to suit detail:', suit)
+
+  // 4. Navigate
+  router.push(route)
 }
 
-const deleteSuit = (id) => {
-  if (!confirm(rtl.value ? 'هل أنت متأكد أنك تريد حذف هذه الدعوى؟' : 'Are you sure you want to delete this suit?')) return
 
-  isDeleting.value = true
-  const resource = createResource({
-    url: 'crm.api2.delete_suit', // replace with your API endpoint
-    params: { name: id },
-    onSuccess(data) {
-      showToast(data.message || (rtl.value ? 'تم حذف الدعوى بنجاح!' : 'Suit deleted successfully!'))
-      fetchSuits()
-    },
-    onError(err) {
-      showToast(err.message || (rtl.value ? 'حدث خطأ أثناء الحذف' : 'Error deleting suit'))
-    }
-  })
-  resource.fetch().finally(() => (isDeleting.value = false))
+const deleteSuit = async () => {
+  if (!confirm(rtl.value ? 'هل أنت متأكد من الحذف؟' : 'Are you sure?')) return;
+
+  try {
+    const resource = createResource({
+      url: 'crm.api2.delete_suit',
+      params: { name: suitData.name },
+      onSuccess: (res) => {
+        if (res.error) {
+          toast.error(res.error);
+          return;
+        }
+        toast.success(res.message);
+        router.back();
+      },
+      onError: (err) => {
+        console.error(err);
+        toast.error(rtl.value ? 'حدث خطأ أثناء الحذف' : 'Error deleting suit');
+      }
+    });
+    await resource.fetch();
+  } catch (err) {
+    console.error(err);
+    toast.error(rtl.value ? 'حدث خطأ أثناء الحذف' : 'Error deleting suit');
+  }
 }
 
 // Theme helpers

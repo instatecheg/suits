@@ -26,8 +26,9 @@ const routes = [
   },
   {
   path: '/suits/:id',
-  name: 'SuitsPage',
-  component: () => import('@/pages/SuitsPage.vue')
+  name: 'SuitDetail',
+  component: () => import('@/pages/SuitsDetail.vue'), // your detail page component
+  props: true
 },
   {
     path: '/dashboard',
