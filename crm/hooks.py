@@ -22,9 +22,9 @@ add_to_apps_screen = [
 	}
 ]
 app_include_js = [
-    "/assets/crm/css/login_custom.js"
+    "/assets/crm/js/login_custom.js"
 ]
-
+app_include_css = "/assets/crm/css/login_custom.css"
 # Includes in <head>
 # ------------------
 
@@ -33,8 +33,8 @@ app_include_js = [
 # app_include_js = "/assets/crm/js/crm.js"
 
 # include js, css files in header of web template
-# web_include_css = "/assets/crm/css/crm.css"
-# web_include_js = "/assets/crm/js/crm.js"
+web_include_css = "/assets/crm/css/login_custom.css"
+web_include_js = "/assets/crm/js/login_custom.js"
 
 # include custom scss in every website theme (without file extension ".scss")
 # website_theme_scss = "crm/public/scss/website"

@@ -285,8 +285,9 @@
                     </button>
 
                     <button class="btn" :disabled="isDeleting" @click="deleteSuit(suit.name)">
-                      <i class="fas fa-trash"></i> {{ rtl ? 'حذف' : 'Delete' }}
+                        <i class="fas fa-trash"></i> {{ rtl ? 'حذف' : 'Delete' }}
                     </button>
+
                   </div>
                 </td>
               </tr>
@@ -444,33 +445,44 @@ const editSuit = (id) => {
   router.push(route)
 }
 
-
-const deleteSuit = async () => {
+const deleteSuit = async (name) => {
   if (!confirm(rtl.value ? 'هل أنت متأكد من الحذف؟' : 'Are you sure?')) return;
 
   try {
     const resource = createResource({
       url: 'crm.api2.delete_suit',
-      params: { name: suitData.name },
+      params: { name },
       onSuccess: (res) => {
         if (res.error) {
           toast.error(res.error);
           return;
         }
+
         toast.success(res.message);
+
+        // Go back to list
         router.back();
+
+        // Auto refresh list after navigation
+        setTimeout(() => {
+          router.go(0);
+        }, 300);
       },
       onError: (err) => {
         console.error(err);
         toast.error(rtl.value ? 'حدث خطأ أثناء الحذف' : 'Error deleting suit');
       }
     });
+
     await resource.fetch();
+
   } catch (err) {
     console.error(err);
     toast.error(rtl.value ? 'حدث خطأ أثناء الحذف' : 'Error deleting suit');
   }
-}
+};
+
+
 
 // Theme helpers
 function applyTheme() {
