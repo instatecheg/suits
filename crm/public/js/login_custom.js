@@ -5,13 +5,18 @@
             const loginPage = document.querySelector("#page-login");
 
             if (loginPage) {
-                loginPage.style.backgroundImage =
-                    "url('/assets/crm/images/abstract-composition-wallpaper-background-concept.jpg')";
-                loginPage.style.backgroundSize = "cover";
-                loginPage.style.backgroundRepeat = "no-repeat";
-                loginPage.style.backgroundPosition = "center";
-                loginPage.style.backgroundAttachment = "fixed";
-            }
+    // Make parent containers full height
+    document.documentElement.style.height = "100%";
+    document.body.style.height = "100%";
+    loginPage.style.minHeight = "100vh"; // full viewport height
+
+    loginPage.style.backgroundImage =
+        "url('/assets/crm/images/studio-background-concept-abstract-empty-light-gradient-purple-studio-room-background-product-plain-studio-background.jpg')";
+    loginPage.style.backgroundSize = "cover";
+    loginPage.style.backgroundRepeat = "no-repeat";
+    loginPage.style.backgroundPosition = "center";
+    loginPage.style.backgroundAttachment = "fixed";
+}
 
             // REMOVE the white backgrounds
             document.querySelectorAll(".page-content-wrapper, .for-login, .page-card").forEach(el => {
@@ -29,39 +34,58 @@
             // Navbar
             const navbar = document.querySelector(".navbar.navbar-light.navbar-expand-lg");
             if (navbar) {
-                navbar.style.backgroundColor = "#0e202d";
-                navbar.style.color = "#a9bbc0";
+                navbar.style.backgroundColor = "#ffffffff";
+                navbar.style.color = "#2d1951";
 
                 navbar.querySelectorAll("a, .navbar-brand, .nav-link").forEach(el => {
-                    el.style.color = "#a9bbc0";
+                    el.style.color = "#2d1951";
                 });
             }
 
             document.querySelectorAll(".form-control").forEach(input => {
-                input.style.border = "0 solid #a9bbc0";
-                input.style.color = "#a9bbc0";
+                input.style.border = "0 solid #2d1951";
+                input.style.color = "#2d1951";
                 input.style.borderRadius = "20px";
             });
 
             document.querySelectorAll("body, #page-login, .page-card-head h4").forEach(el => {
-                el.style.color = "#a9bbc0";
+                el.style.color = "#d2c8e6ff";
             });
 
             document.querySelectorAll(".btn.btn-primary, .btn.btn-sm.btn-primary.btn-block.btn-login")
                 .forEach(btn => {
-                btn.style.backgroundColor = "#0e202d";
-                btn.style.borderColor = "#a9bbc0";
+                btn.style.backgroundColor = "#ffffffff";
+                btn.style.borderColor = "#2d1951";
                 btn.style.borderRadius = "20px";
-                btn.style.color = "#a9bbc0";
+                btn.style.color = "#2d1951";
                 btn.addEventListener("mouseover", () => {
-                    btn.style.backgroundColor = "#a9bbc0";
-                    btn.style.color = "#0e202d";
+                    btn.style.backgroundColor = "#2d1951";
+                    btn.style.color = "#ffffffff";
                 });
                 btn.addEventListener("mouseout", () => {
-                    btn.style.backgroundColor = "#0e202d";
-                    btn.style.color = "#a9bbc0";
+                    btn.style.backgroundColor = "#ffffffff";
+                    btn.style.color = "#2d1951";
                 });
             });
+
+            document.querySelectorAll(".btn-login-with-email-link")
+    .forEach(btn => {
+        btn.style.backgroundColor = "#ffffffff";
+        btn.style.borderColor = "#2d1951";
+        btn.style.borderRadius = "20px";
+        btn.style.color = "#2d1951";
+
+        btn.addEventListener("mouseover", () => {
+            btn.style.backgroundColor = "#2d1951";
+            btn.style.color = "#ffffffff";
+        });
+
+        btn.addEventListener("mouseout", () => {
+            btn.style.backgroundColor = "#ffffffff";
+            btn.style.color = "#2d1951";
+        });
+    });
+
         }
     }
 

@@ -1,49 +1,35 @@
 <template>
-  <div id="case-app" class="app-root" :dir="rtl ? 'rtl' : 'ltr'">
+  <div
+    id="case-app"
+    class="app-root"
+    :class="{ dark: ui.darkMode }"
+    :dir="ui.rtl ? 'rtl' : 'ltr'"
+    :style="{ '--theme-hue': ui.hue }"
+  >
     <!-- Top bar -->
     <header class="card header compact">
       <div class="brand">
         <div>
-          <div class="brand-sub">{{ rtl ? 'الدعاوى' : 'Suits' }}</div>
+          <div class="brand-sub">{{ ui.rtl ? 'الدعاوى' : 'Suits' }}</div>
         </div>
       </div>
 
       <div class="toolbar">
-        <div class="search card">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden>
-            <circle cx="11" cy="11" r="7" stroke-width="2" />
-            <path d="M20 20l-3.5-3.5" stroke-width="2" />
-          </svg>
-          <input v-model="searchQuery" :placeholder="rtl ? 'ابحث في الدعوى...' : 'Search cases…'" />
+        <div class="search-box">
+          <input
+            type="text"
+            v-model="searchQuery"
+            :placeholder="ui.rtl ? 'بحث...' : 'Search...'"
+          />
         </div>
 
-        <div class="controls-inline">
-          <label class="chip">
-            <input type="range" min="0" max="360" v-model.number="h" @input="applyTheme" />
-            <span class="chip-label">Hue</span>
-          </label>
-
-          <label class="chip">
-            <input type="checkbox" v-model="dark" @change="applyTheme" />
-            <span>{{ rtl ? 'الوضع الداكن' : 'Dark' }}</span>
-          </label>
-
-          <label class="chip">
-            <input type="checkbox" v-model="rtl" @change="applyDir" />
-            <span>RTL</span>
-          </label>
-
-          <button class="btn" @click="showCreateForm = !showCreateForm">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M12 5v14M5 12h14" stroke-width="2" stroke-linecap="round" />
-            </svg>
-            <span class="btn-label">
-              {{ rtl ? (showCreateForm ? 'إخفاء النموذج' : 'إضافة دعوى') : (showCreateForm ? 'Hide Form' : 'Add Case') }}
-            </span>
-          </button>
-        </div>
+        <button class="btn add-btn" @click="goToNewSuit">
+          <i class="fas fa-plus"></i>
+          {{ ui.rtl ? 'إضافة دعوى' : 'New Suit' }}
+        </button>
       </div>
     </header>
+
 
     <!-- Main content (form + table) -->
     <main class="content">
@@ -313,17 +299,16 @@
 <script setup>
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { createResource } from 'frappe-ui'
-import { useRouter } from "vue-router";
+import { useRouter } from "vue-router"
+
+// ⭐ Global UI settings store
+import { useUISettings } from "@/stores/useUISettings";
+const ui = useUISettings();
 
 // Router
 const router = useRouter();
 
-// Visual / theme state
-const dark = ref(true)
-const rtl = ref(true)
-const h = ref(266)
-
-// App state
+// ========== APP STATE ==========
 const showCreateForm = ref(false)
 const isLoading = ref(false)
 const isCreating = ref(false)
@@ -332,6 +317,7 @@ const searchQuery = ref('')
 const Suits = ref([])
 const toast = ref({ show: false, text: '' })
 
+// Create form model
 const newSuits = reactive({
   name1: '',
   scope_of_work: '',
@@ -344,6 +330,7 @@ const newSuits = reactive({
   opponent_role: '',
 })
 
+// Tabs
 const tabs = [
   'معلومات عامة',
   'الخصوم',
@@ -355,6 +342,7 @@ const tabs = [
 ]
 const activeTab = ref('معلومات عامة')
 
+// Suit type labels
 const suitsTypeOptions = {
   administrative: 'إدارية',
   inheritance_rights: 'إرث وحقوق ورثة',
@@ -366,9 +354,10 @@ const suitsTypeOptions = {
   criminal: 'جزائي',
 }
 
-// Fetch suits
+// ========== FETCH SUITS ==========
 const fetchSuits = () => {
   isLoading.value = true
+
   const resource = createResource({
     url: 'frappe.client.get_list',
     params: {
@@ -383,12 +372,14 @@ const fetchSuits = () => {
       console.error(err)
     },
   })
+
   resource.fetch().finally(() => (isLoading.value = false))
 }
 
-// Create suit
+// ========== CREATE SUIT ==========
 const createSuits = () => {
   isCreating.value = true
+
   const resource = createResource({
     url: 'crm.api2.create_Suits',
     params: { ...newSuits },
@@ -402,6 +393,7 @@ const createSuits = () => {
       showToast(err.message || 'حدث خطأ')
     },
   })
+
   resource.fetch().finally(() => {
     isCreating.value = false
   })
@@ -411,6 +403,7 @@ const resetSuitsForm = () => {
   Object.keys(newSuits).forEach((k) => (newSuits[k] = ''))
 }
 
+// ========== FILTER ==========
 const filteredSuits = computed(() => {
   const q = searchQuery.value?.trim().toLowerCase()
   if (!q) return Suits.value
@@ -419,34 +412,27 @@ const filteredSuits = computed(() => {
 
 const getSuitsTypeArabic = (type) => suitsTypeOptions[type] || type || '--'
 
-// View/Edit/Delete functions
+// ========== VIEW / EDIT ==========
 const viewSuit = (id) => {
   console.log('View suit:', id)
 }
 
 const editSuit = (id) => {
-  // 1. Find the suit object
   const suit = Suits.value.find(s => s.name === id)
   if (!suit) {
-    showToast(rtl.value ? 'تعذر العثور على الدعوى' : 'Suit not found')
+    showToast(ui.rtl ? 'تعذر العثور على الدعوى' : 'Suit not found')
     return
   }
 
-  // 2. Build route (same as getRoute logic)
-  const route = {
-    name: 'SuitDetail',   // Make sure you have this route in router
+  router.push({
+    name: 'SuitDetail',
     params: { id: suit.name }
-  }
-
-  // 3. Optional: any onClick logic
-  console.log('Navigating to suit detail:', suit)
-
-  // 4. Navigate
-  router.push(route)
+  })
 }
 
+// ========== DELETE ==========
 const deleteSuit = async (name) => {
-  if (!confirm(rtl.value ? 'هل أنت متأكد من الحذف؟' : 'Are you sure?')) return;
+  if (!confirm(ui.rtl ? 'هل أنت متأكد من الحذف؟' : 'Are you sure?')) return;
 
   try {
     const resource = createResource({
@@ -454,51 +440,59 @@ const deleteSuit = async (name) => {
       params: { name },
       onSuccess: (res) => {
         if (res.error) {
-          toast.error(res.error);
-          return;
+          toast.error(res.error)
+          return
         }
 
-        toast.success(res.message);
+        toast.success(res.message)
+        router.back()
 
-        // Go back to list
-        router.back();
-
-        // Auto refresh list after navigation
         setTimeout(() => {
-          router.go(0);
-        }, 300);
+          router.go(0)
+        }, 300)
       },
       onError: (err) => {
-        console.error(err);
-        toast.error(rtl.value ? 'حدث خطأ أثناء الحذف' : 'Error deleting suit');
+        console.error(err)
+        toast.error(ui.rtl ? 'حدث خطأ أثناء الحذف' : 'Error deleting suit')
       }
-    });
+    })
 
-    await resource.fetch();
+    await resource.fetch()
 
   } catch (err) {
-    console.error(err);
-    toast.error(rtl.value ? 'حدث خطأ أثناء الحذف' : 'Error deleting suit');
+    console.error(err)
+    toast.error(ui.rtl ? 'حدث خطأ أثناء الحذف' : 'Error deleting suit')
   }
-};
-
-
-
-// Theme helpers
-function applyTheme() {
-  const root = document.documentElement
-  root.classList.toggle('dark', dark.value)
-  root.style.setProperty('--h', String(h.value))
 }
 
-function applyDir() {
-  const html = document.documentElement
-  html.setAttribute('dir', rtl.value ? 'rtl' : 'ltr')
-  html.setAttribute('lang', rtl.value ? 'ar' : 'en')
-}
+// ========== THEME APPLIED GLOBALLY ==========
+watch(
+  () => ui.darkMode,
+  () => {
+    document.documentElement.classList.toggle('dark', ui.darkMode)
+  },
+  { immediate: true }
+)
 
-watch(rtl, applyDir)
+watch(
+  () => ui.hue,
+  () => {
+    document.documentElement.style.setProperty('--h', String(ui.hue))
+  },
+  { immediate: true }
+)
 
+watch(
+  () => ui.rtl,
+  () => {
+    const html = document.documentElement
+    html.setAttribute('dir', ui.rtl ? 'rtl' : 'ltr')
+    html.setAttribute('lang', ui.rtl ? 'ar' : 'en')
+  },
+  { immediate: true }
+)
+
+// Toast helper
 function showToast(t) {
   toast.value.text = t
   toast.value.show = true
@@ -506,10 +500,8 @@ function showToast(t) {
   showToast._t = setTimeout(() => (toast.value.show = false), 2200)
 }
 
-// Initial mount
+// ========== MOUNT ==========
 onMounted(() => {
-  applyTheme()
-  applyDir()
   fetchSuits()
 })
 </script>

@@ -86,8 +86,52 @@
   </div>
 </template>
 
-<style scoped>
+<script setup>
+import { Briefcase, Users, FileText } from 'lucide-vue-next';
+import { onMounted, watch } from 'vue';
+import { useUISettings } from '@/stores/useUISettings';
 
+// Import user images
+import TasksImg from '/home/frappe/frappe-bench/apps/crm/frontend/src/assets/notes_13008973.png'
+import MeetingsImg from '/home/frappe/frappe-bench/apps/crm/frontend/src/assets/board-directors_11934104.png'
+import RemindersImg from '/home/frappe/frappe-bench/apps/crm/frontend/src/assets/notes_15747285.png'
+
+// Dashboard stats
+const dashboardStats = [
+  { label: 'قضاياي', subtitle: 'إجمالي القضايا النشطة', count: 0, icon: Briefcase },
+  { label: 'عملائي', subtitle: 'عدد العملاء المسجلين', count: 0, icon: Users },
+  { label: 'مستنداتي', subtitle: 'عدد المستندات المرفوعة', count: 0, icon: FileText },
+]
+
+// UI Settings store
+const ui = useUISettings()
+
+// Apply theme & direction on mounted
+const applyUI = () => {
+  const root = document.documentElement
+  root.classList.toggle('dark', ui.darkMode)
+  root.style.setProperty('--h', ui.hue)
+
+  const html = document.documentElement
+  html.setAttribute('dir', ui.rtl ? 'rtl' : 'ltr')
+  html.setAttribute('lang', ui.rtl ? 'ar' : 'en')
+}
+
+// Watch for live changes
+watch([() => ui.darkMode, () => ui.hue], applyUI)
+watch(() => ui.rtl, applyUI)
+
+onMounted(() => {
+  applyUI()
+})
+
+// Dummy functions
+function addNewTask() { console.log('Add new task clicked') }
+function meetingForm() { console.log('Meeting form clicked') }
+function reminderForm() { console.log('Reminder form clicked') }
+</script>
+
+<style scoped>
 
 @import url(https://fonts.googleapis.com/earlyaccess/droidarabickufi.css);
 html,body,#case-app { 
@@ -217,30 +261,4 @@ font-family: 'Droid Arabic Kufi', sans-serif !important;
 }
 </style>
 
-<script setup>
-import { Briefcase, Users, FileText } from 'lucide-vue-next';
-import { ref, reactive, computed, onMounted } from 'vue';
-import { createResource } from 'frappe-ui';
-
-// Import user images
-import TasksImg from '/home/frappe/frappe-bench/apps/crm/frontend/src/assets/notes_13008973.png'
-import MeetingsImg from '/home/frappe/frappe-bench/apps/crm/frontend/src/assets/board-directors_11934104.png'
-import RemindersImg from '/home/frappe/frappe-bench/apps/crm/frontend/src/assets/notes_15747285.png'
-
-const dashboardStats = [
-  { label: 'قضاياي', subtitle: 'إجمالي القضايا النشطة', count: 0, icon: Briefcase },
-  { label: 'عملائي', subtitle: 'عدد العملاء المسجلين', count: 0, icon: Users },
-  { label: 'مستنداتي', subtitle: 'عدد المستندات المرفوعة', count: 0, icon: FileText },
-]
-
-function addNewTask() {
-  console.log('Add new task clicked')
-}
-function meetingForm() {
-  console.log('Meeting form clicked')
-}
-function reminderForm() {
-  console.log('Reminder form clicked')
-}
-</script>
 

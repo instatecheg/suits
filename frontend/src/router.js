@@ -27,8 +27,13 @@ const routes = [
   {
   path: '/suits/:id',
   name: 'SuitDetail',
-  component: () => import('@/pages/SuitsDetail.vue'), // your detail page component
+  component: () => import('@/pages/SuitsDetail.vue'), 
   props: true
+},
+{
+  path: '/settings',
+  name: 'Settings',
+  component: () => import('@/pages/Settings.vue'),
 },
   {
     path: '/dashboard',
