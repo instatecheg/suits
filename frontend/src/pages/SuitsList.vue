@@ -8,37 +8,42 @@
   >
     <!-- Top bar -->
     <header class="card header compact">
-      <div class="brand">
-        <div>
-          <div class="brand-sub">{{ ui.rtl ? 'الدعاوى' : 'Suits' }}</div>
-        </div>
-      </div>
+  <div class="brand">
+    <div>
+      <div class="brand-sub">{{ ui.rtl ? 'الدعاوى' : 'Suits' }}</div>
+    </div>
+  </div>
 
-      <div class="toolbar">
-        <div class="search-box">
-          <input
-            type="text"
-            v-model="searchQuery"
-            :placeholder="ui.rtl ? 'بحث...' : 'Search...'"
-          />
-        </div>
+  <div class="toolbar">
+    <div class="search-box">
+      <input
+        type="text"
+        v-model="searchQuery"
+        :placeholder="ui.rtl ? 'بحث...' : 'Search...'"
+      />
+    </div>
 
-        <button class="btn add-btn" @click="goToNewSuit">
-          <i class="fas fa-plus"></i>
-          {{ ui.rtl ? 'إضافة دعوى' : 'New Suit' }}
-        </button>
-      </div>
-    </header>
+    <button class="btn" @click="showCreateForm = !showCreateForm">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M12 5v14M5 12h14" stroke-width="2" stroke-linecap="round" />
+      </svg>
+      <span class="btn-label">
+        {{ ui.rtl
+          ? (showCreateForm ? 'إخفاء النموذج' : 'إضافة دعوى')
+          : (showCreateForm ? 'Hide Form' : 'Add Case')
+        }}
+      </span>
+    </button>
+  </div>
+</header>
+
 
 
     <!-- Main content (form + table) -->
     <main class="content">
       <!-- Form card -->
       <section v-if="showCreateForm" class="card panel form-panel">
-        <h3 class="form-title">
-          <i class="fas fa-file-circle-plus"></i>
-          {{ rtl ? 'إضافة دعوى' : 'Add Case' }}
-        </h3>
+        
 
         <!-- Tabs -->
         <div class="tabs-row">
@@ -508,11 +513,8 @@ onMounted(() => {
 
 
 <style scoped>
-.bg-surface-white {
-  background-color: none !important;
-}
-/* Import Amiri font from Google */
 @import url(https://fonts.googleapis.com/earlyaccess/droidarabickufi.css);
+
 /* THEME TOKENS */
 :root {
   --h: 266;
@@ -524,6 +526,7 @@ onMounted(() => {
   --glass-border: hsl(0 0% 100%/.35);
   --shadow-1: 0 10px 30px rgba(255, 255, 255, 0.12);
 }
+
 :root.dark {
   --txt: hsl(0 0% 98%);
   --bg-1: hsl(230 35% 7%);
@@ -532,27 +535,85 @@ onMounted(() => {
   --shadow-1: 0 rgba(255, 255, 255, 1);
 }
 
-html,body,#case-app { height: 100%; background: var(--glass);font-family: 'Droid Arabic Kufi', sans-serif !important;}
-body { margin: 0; font-family: 'Droid Arabic Kufi', sans-serif !important; color: var(--txt); background: var(--glass) !important;}
-.bg-surface-white {
-  background: var(--glass);
+/* GLOBAL BACKGROUND — same as first style */
+html,
+body,
+#case-app {
+  height: 100%;
+  font-family: 'Droid Arabic Kufi', sans-serif !important;
+  color: var(--txt);
+  background:
+    radial-gradient(800px 600px at 10% 10%, hsl(calc(var(--h) + 30) 90% 22%/.35), transparent 60%),
+    radial-gradient(900px 700px at 90% 10%, hsl(calc(var(--h) - 20) 90% 30%/.25), transparent 60%),
+    radial-gradient(900px 900px at 90% 90%, hsl(calc(var(--h) + 60) 90% 25%/.28), transparent 55%),
+    var(--bg-1);
 }
-/* app layout */
+
+body { margin: 0 }
+
+/* Optional wrapper (use if your root has it) */
+.dashboard-wrapper {
+  font-family: 'Droid Arabic Kufi', sans-serif !important;
+  color: var(--txt);
+  background:
+    radial-gradient(800px 600px at 10% 10%, hsl(calc(var(--h) + 30) 90% 22%/.35), transparent 60%),
+    radial-gradient(900px 700px at 90% 10%, hsl(calc(var(--h) - 20) 90% 30%/.25), transparent 60%),
+    radial-gradient(900px 900px at 90% 90%, hsl(calc(var(--h) + 60) 90% 25%/.28), transparent 55%),
+    var(--bg-1);
+}
+
+/* SURFACE */
+.bg-surface-white {
+  background: var(--glass) !important;
+}
+
+/* CARD — glass style from first block */
+.card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-1);
+  backdrop-filter: blur(10px);
+}
+
+/* ====== EVERYTHING BELOW UNCHANGED ====== */
+
 .app-root { min-height: 100vh; padding: 20px; grid-template-columns: 1fr; gap: 18px; }
+
 .header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px; border-radius:16px; }
-.card { box-shadow: none !important; background: linear-gradient(
-    135deg,
-    hsl(var(--h) 70% 60% / 0.25),
-    hsl(var(--h) 70% 45% / 0.25)
-  ); border:1px solid var(--glass-border); border-radius:12px;  backdrop-filter: blur(8px); }
+
 .brand { display:flex; align-items:center; gap:12px; }
-.logo { width:48px; height:48px; border-radius:12px; background: linear-gradient(135deg, hsl(var(--h) var(--s) calc(var(--l) + 6%)), hsl(calc(var(--h) - 25) 85% 58%)); }
+.logo {
+  width:48px; height:48px; border-radius:12px;
+  background: linear-gradient(
+    135deg,
+    hsl(var(--h) var(--s) calc(var(--l) + 6%)),
+    hsl(calc(var(--h) - 25) 85% 58%)
+  );
+}
 .brand-title { font-weight:900; font-size:1rem }
 .brand-sub { opacity:.75; font-size:1.5rem }
 
 .toolbar { display:flex; align-items:center; gap:12px; }
-.search { height: 40px; display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:999px; border:1px solid var(--glass-border); background: hsl(0 0% 100% /.6); min-width:260px; }
-.search input { border:0; background:transparent; outline: none; color:var(--txt); }
+
+.search {
+  height:40px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid var(--glass-border);
+  background:hsl(0 0% 100% /.6);
+  min-width:260px;
+}
+
+.search input {
+  border:0;
+  background:transparent;
+  outline:none;
+  color:var(--txt);
+}
 
 .controls-inline { display:flex; align-items:center; gap:10px }
 .chip { display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:999px; border:1px solid var(--glass-border); background: hsl(0 0% 100% /.55); }
