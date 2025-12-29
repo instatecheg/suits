@@ -2,11 +2,7 @@
   <div
     :dir="ui.rtl ? 'rtl' : 'ltr'"
     class="sidebar card transition-all duration-300 ease-in-out"
-    <div
-  class="submenu glass"
-  :class="ui.rtl ? 'submenu-rtl' : 'submenu-ltr'"
->
-
+    :class="isSidebarCollapsed ? 'collapsed' : 'expanded'"
     :style="{ '--h': ui.hue }"
   >
     <!-- User Profile -->
@@ -14,37 +10,18 @@
       <UserDropdown :isCollapsed="isSidebarCollapsed" />
     </div>
 
-    <!-- Navigation -->
-    <nav v-if="!isSidebarCollapsed" class="nav">
-      <div
-        v-for="view in allViews"
-        :key="view.label"
-        class="nav-section"
-      >
-        <div
-          v-if="!view.hideLabel"
-          class="section-label"
-        >
-          {{ ui.rtl ? view.name_ar || view.name : view.name }}
-        </div>
+<!-- Navigation -->
+<nav v-if="!isSidebarCollapsed" class="nav">
+  <div
+    v-for="view in allViews"
+    :key="view.label"
+    class="nav-section"
+  >
+    
 
-        <div
-  v-for="link in view.views"
-  :key="link.label"
-  class="nav-item"
-  @click="$router.push(link.to)"
->
-  <div class="icon-wrap">
-    <component :is="link.icon" class="nav-icon" />
   </div>
-  <span class="nav-text">
-    {{ ui.rtl ? (link.label_ar || link.label) : link.label }}
+</nav>
 
-  </span>
-</div>
-
-      </div>
-    </nav>
 
     <!-- Collapsed Mode -->
     <nav v-else class="nav-collapsed">
@@ -67,38 +44,35 @@
     </nav>
 
     <!-- Collapse Button -->
-<!-- Collapse Button -->
-<div class="sidebar-footer">
-  <button
-    class="toggle-btn"
-    @click="isSidebarCollapsed = !isSidebarCollapsed"
-  >
-    <img
-      src="@/assets/setup-dots_16139.png"
-      alt="dots"
-      class="dots-img"
-    />
-  </button>
-</div>
-
+    <div class="sidebar-footer">
+      <button
+        class="toggle-btn"
+        @click="isSidebarCollapsed = !isSidebarCollapsed"
+      >
+        <img
+          src="@/assets/setup-dots_16139.png"
+          alt="dots"
+          class="dots-img"
+        />
+      </button>
+    </div>
   </div>
 </template>
 
-
-
 <style scoped>
+/* DOTS IMAGE */
 .dots-img {
-  width: 24px; /* adjust size as needed */
+  width: 24px;
   height: 24px;
 }
-/* Import Amiri font from Google */
-@import url(https://fonts.googleapis.com/earlyaccess/droidarabickufi.css);
 
-/* Force Amiri font globally */
-html, body, #case-app, icon-wrap, profile{
+/* FONT */
+@import url(https://fonts.googleapis.com/earlyaccess/droidarabickufi.css);
+html, body, #case-app, icon-wrap, profile {
   font-family: 'Droid Arabic Kufi', sans-serif !important;
 }
-/* ===== GLASS SIDEBAR ===== */
+
+/* SIDEBAR */
 .sidebar {
   display: flex;
   flex-direction: column;
@@ -115,15 +89,14 @@ html, body, #case-app, icon-wrap, profile{
   -webkit-backdrop-filter: blur(10px);
   overflow: hidden;
   transition: all 0.3s ease-in-out;
-  font-family: 'Droid Arabic Kufi', sans-serif !important;
 }
 :root.dark .sidebar {
-  background:hsl(230 28% 12%/.45);
+  background: hsl(230 28% 12% / 0.45);
 }
 .sidebar.expanded { width: 200px; }
 .sidebar.collapsed { width: 80px; }
 
-/* ===== PROFILE ===== */
+/* PROFILE */
 .profile {
   padding: 8px;
   display: flex;
@@ -136,17 +109,48 @@ html, body, #case-app, icon-wrap, profile{
   );
   border-bottom: 1px solid var(--glass-border);
   gap: 1px;
-  font-family: 'Droid Arabic Kufi', sans-serif !important;
 }
 
-/* ===== NAVIGATION ===== */
-.nav { display: grid; gap: 12px; padding: 16px; overflow-y: auto; }
+/* NAVIGATION */
+.nav {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  overflow-y: auto;
+}
 .nav-section + .nav-section { margin-top: 1rem; }
-.section-label {font-family: 'Droid Arabic Kufi', sans-serif !important; font-size: 0.8rem; font-weight: 900; color: hsl(var(--h) 80% 75%); text-transform: uppercase; margin-bottom: 6px; }
-.nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 12px; padding: 16px 12px; width: 100%; cursor: pointer; background: none !important; transition: transform 0.15s ease, background 0.2s ease; margin-bottom: 10px; }
-:root.dark .nav-item { background: hsl(0 0% 100% / 0.06); }
-.nav-item:hover { transform: translateY(-1px); background: linear-gradient(135deg, hsl(var(--h) 70% 60% / 0.25), hsl(var(--h) 70% 45% / 0.25)); }
+.section-label {
+  font-size: 0.8rem;
+  font-weight: 900;
+  color: hsl(var(--h) 80% 75%);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
 
+/* NAV ITEM */
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+  padding: 16px 12px;
+  width: 100%;
+  cursor: pointer;
+  background: none !important;
+  transition: transform 0.15s ease, background 0.2s ease;
+  margin-bottom: 10px;
+}
+:root.dark .nav-item {
+  background: hsl(0 0% 100% / 0.06);
+}
+.nav-item:hover {
+  transform: translateY(-1px);
+  background: linear-gradient(135deg, hsl(var(--h) 70% 60% / 0.25), hsl(var(--h) 70% 45% / 0.25));
+}
+
+/* ICON WRAP */
 .icon-wrap {
   width: 56px;
   height: 56px;
@@ -155,26 +159,177 @@ html, body, #case-app, icon-wrap, profile{
   align-items: center;
   justify-content: center;
   border: 1px solid var(--glass-border);
-  background: linear-gradient(145deg, rgba(255,255,255,0.25), rgba(255,255,255,0.05)); /* Glass effect */
-  box-shadow: inset -4px -4px 8px rgba(255,255,255,0.2), inset 4px 4px 8px rgba(0,0,0,0.1); /* 2D glass sphere */
+  background: linear-gradient(145deg, rgba(255,255,255,0.25), rgba(255,255,255,0.05));
+  box-shadow: inset -4px -4px 8px rgba(255,255,255,0.2),
+              inset 4px 4px 8px rgba(0,0,0,0.1);
   margin-bottom: 6px;
 }
+.nav-icon {
+  width: 32px;
+  height: 32px;
+  color: hsl(var(--h) 80% 70%);
+}
+.nav-text {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--txt);
+  margin-top: 4px;
+}
 
-.nav-icon { width: 32px; height: 32px; color: hsl(var(--h) 80% 70%); }
-.nav-text { font-size: 0.95rem; font-weight: 800; color: var(--txt); margin-top: 4px; }
+/* COLLAPSED */
+.nav-collapsed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 0;
+  gap: 18px;
+}
+.nav-icon-only {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.nav-icon-only:hover {
+  transform: scale(1.1);
+}
 
-/* ===== COLLAPSED ===== */
-.nav-collapsed { display: flex; flex-direction: column; align-items: center; padding: 16px 0; gap: 18px; }
-.nav-icon-only { cursor: pointer; transition: transform 0.2s ease; }
-.nav-icon-only:hover { transform: scale(1.1); }
-
-/* ===== FOOTER TOGGLE ===== */
-.sidebar-footer { font-family: 'Droid Arabic Kufi', sans-serif !important; padding: 14px; display: flex; justify-content: center; border-top: 1px solid var(--glass-border); }
-.toggle-btn { display: inline-flex; align-items: center; gap: 8px; border: 0; background: transparent; color: hsl(var(--h) 80% 70%); font-weight: 800; cursor: pointer; transition: color 0.2s ease; }
+/* FOOTER TOGGLE */
+.sidebar-footer {
+  padding: 14px;
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid var(--glass-border);
+}
+.toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: transparent;
+  color: hsl(var(--h) 80% 70%);
+  font-weight: 800;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
 .toggle-btn:hover { color: hsl(var(--h) 85% 75%); }
-.toggle-icon { width: 20px; height: 20px; transition: transform 0.3s ease; }
-.toggle-icon.rotated { transform: rotateY(180deg); }
+
+/* NAV ITEM WRAPPER */
+.nav-item-wrapper { position: relative; }
+
+/* SUBMENU */
+/* WRAPPER */
+.nav-item-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* MAIN ITEM (Contacts) */
+.hide-on-hover {
+  transition: opacity 0.2s ease;
+}
+
+/* SUBMENU DEFAULT STATE */
+/* SUBMENU (glass container) */
+.submenu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  opacity: 0;
+  pointer-events: none;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  padding: 8px;
+  border-radius: 14px;
+
+  background: var(--submenu-glass);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+
+  border: 1px solid var(--submenu-border);
+  box-shadow: var(--submenu-shadow);
+
+  z-index: 100;
+
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+
+/* ON HOVER */
+.nav-item-wrapper:hover .hide-on-hover {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.nav-item-wrapper:hover .submenu {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* RTL / LTR */
+.submenu-rtl {
+  right: 0;
+  left: auto;
+}
+
+.submenu-ltr {
+  left: 0;
+  right: auto;
+}
+
+/* SUBMENU ITEMS */
+.submenu-item {
+  padding: 12px;
+  border-radius: 10px;
+
+  background: var(--submenu-item-bg);
+  color: var(--txt);
+
+  cursor: pointer;
+  font-weight: 600;
+  text-align: center;
+
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.submenu-item:hover {
+  background: var(--submenu-item-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+
+:root {
+  --submenu-glass: hsl(var(--h) 40% 96% / 0.65);
+  --submenu-border: hsl(var(--h) 30% 80% / 0.4);
+  --submenu-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+
+  --submenu-item-bg: hsl(var(--h) 40% 98% / 0.8);
+  --submenu-item-hover: hsl(var(--h) 45% 90% / 0.9);
+}
+
+:root.dark {
+  --submenu-glass: hsl(var(--h) 25% 12% / 0.6);
+  --submenu-border: hsl(var(--h) 30% 60% / 0.15);
+  --submenu-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+
+  --submenu-item-bg: hsl(var(--h) 20% 18% / 0.8);
+  --submenu-item-hover: hsl(var(--h) 30% 25% / 0.85);
+}
+
+
+
 </style>
+
 <script setup>
 import {  Scale } from "lucide-vue-next"
 import LucideLayoutDashboard from '~icons/lucide/layout-dashboard'
@@ -246,6 +401,45 @@ const links = [
   { label: "Files", label_ar: "الملفات", icon: NoteIcon, to: "Notes" },
   { label: "Tasks", label_ar: "المهام", icon: TaskIcon, to: "Tasks" },
 ];
+const suitsSubmenu = [
+  {
+    label: "Case",
+    label_ar: "دعوى",
+    to: { name: "Suits" },
+  },
+  {
+    label: "Sessions",
+    label_ar: "جلسات",
+    to: { name: "Sessions" },
+  },
+]
+
+const contactSubmenu = [
+  {
+    label: "Company",
+    label_ar: "شركة",
+    to: { name: "Company" }
+  },
+  {
+    label: "Individual",
+    label_ar: "فرد",
+    to: { name: "Individual" }
+  },
+  {
+    label: "Customer",
+    label_ar: "عميل",
+    to: { name: "Customer" }
+  }
+];
+
+const submenus = {
+  Contacts: contactSubmenu,
+  Suits: suitsSubmenu,
+}
+
+function hasSubmenu(link) {
+  return !!submenus[link.label]
+}
 
 const allViews = computed(() => {
   let _views = [
