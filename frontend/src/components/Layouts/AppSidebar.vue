@@ -1,8 +1,13 @@
 <template>
   <div
-    dir="rtl"
+    :dir="ui.rtl ? 'rtl' : 'ltr'"
     class="sidebar card transition-all duration-300 ease-in-out"
-    :class="isSidebarCollapsed ? 'collapsed' : 'expanded'"
+    <div
+  class="submenu glass"
+  :class="ui.rtl ? 'submenu-rtl' : 'submenu-ltr'"
+>
+
+    :style="{ '--h': ui.hue }"
   >
     <!-- User Profile -->
     <div class="profile">
@@ -20,7 +25,7 @@
           v-if="!view.hideLabel"
           class="section-label"
         >
-          {{ rtl ? view.name_ar || view.name : view.name }}
+          {{ ui.rtl ? view.name_ar || view.name : view.name }}
         </div>
 
         <div
@@ -33,7 +38,8 @@
     <component :is="link.icon" class="nav-icon" />
   </div>
   <span class="nav-text">
-    {{ rtl ? link.label_ar || link.label_ar : link.label_ar }}
+    {{ ui.rtl ? (link.label_ar || link.label) : link.label }}
+
   </span>
 </div>
 
@@ -228,42 +234,18 @@ const isSidebarCollapsed = useStorage('isSidebarCollapsed', false)
 
 const isFCSite = ref(window.is_fc_site)
 const isDemoSite = ref(window.is_demo_site)
-const rtl = ref(document.dir === 'rtl' || document.documentElement.dir === 'rtl')
+import { useUISettings } from "@/stores/useUISettings";
 
+const ui = useUISettings();
 
 const links = [
-  {
-    label: 'Dashboard',label_ar: 'لوحة التحكم',
-    icon: LucideLayoutDashboard,
-    to: 'Dashboard',
-  },
-  {
-    label: ' Suits', label_ar: 'الدعاوى',
-    icon: Scale,
-    to: 'Suits',
-  },
-  {
-    label: 'Issues', label_ar: 'المسائل',
-    icon: DealsIcon,
-    to: 'Deals',
-  },
-  {
-    label: 'Contacts',label_ar: 'جهات الاتصال',
-    icon: ContactsIcon,
-    to: 'Contacts',
-  },
-  {
-    label: 'Files', label_ar: 'الملفات',
-    icon: NoteIcon,
-    to: 'Notes',
-  },
-  {
-    label: 'Tasks', label_ar: 'المهام',
-    icon: TaskIcon,
-    to: 'Tasks',
-  },
-
-]
+  { label: "Dashboard", label_ar: "لوحة التحكم", icon: LucideLayoutDashboard, to: "Dashboard" },
+  { label: "Suits", label_ar: "الدعاوى", icon: Scale, to: "Suits" },
+  { label: "Issues", label_ar: "المسائل", icon: DealsIcon, to: "Issues" },
+  { label: "Contacts", label_ar: "جهات الاتصال", icon: ContactsIcon, to: "Contacts" },
+  { label: "Files", label_ar: "الملفات", icon: NoteIcon, to: "Notes" },
+  { label: "Tasks", label_ar: "المهام", icon: TaskIcon, to: "Tasks" },
+];
 
 const allViews = computed(() => {
   let _views = [
@@ -633,4 +615,3 @@ const articles = ref([
   },
 ])
 </script>
-

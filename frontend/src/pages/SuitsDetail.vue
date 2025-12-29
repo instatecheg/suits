@@ -242,7 +242,9 @@ onMounted(() => {
 <style scoped>
 .suit-page { padding: 1rem; }
 .form-grid { display: grid; gap: 1rem; }
+:root.dark .field { display: flex; flex-direction: column; color:white; }
 .field { display: flex; flex-direction: column; color:black; }
+.field input, .field select { padding:8px; border:1px solid rgba(0,0,0,0.08); border-radius:8px; background: white; color:black; }
 .tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
 .tabs button.active { font-weight: bold; border-bottom: 2px solid #007bff; }
 .form-actions { margin-top: 1rem; display: flex; gap: 1rem; }

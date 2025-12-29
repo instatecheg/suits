@@ -10,7 +10,7 @@
     <header class="card header compact">
   <div class="brand">
     <div>
-      <div class="brand-sub">{{ ui.rtl ? 'الدعاوى' : 'Suits' }}</div>
+      <div class="brand-sub">{{ ui.rtl ? 'الدعاوى' : 'Issues' }}</div>
     </div>
   </div>
 
@@ -57,17 +57,17 @@
           </button>
         </div>
 
-        <form @submit.prevent="createSuits" class="form-grid">
+        <form @submit.prevent="createIssues" class="form-grid">
           <!-- Tab: General Info -->
           <div v-if="activeTab === 'معلومات عامة'" class="grid">
             <div class="field">
               <label>اسم الدعوى</label>
-              <input v-model="newSuits.name1" type="text" required />
+              <input v-model="newIssues.name1" type="text" required />
             </div>
 
             <div class="field">
               <label>نطاق العمل</label>
-              <select v-model="newSuits.scope_of_work" required>
+              <select v-model="newIssues.scope_of_work" required>
                 <option value="">إختر نطاق العمل</option>
                 <option value="آخر">آخر</option>
                 <option value="إدارية">إدارية</option>
@@ -90,12 +90,12 @@
 
             <div class="field">
               <label>تاريخ الإدخال</label>
-              <input v-model="newSuits.entry_date" type="date" />
+              <input v-model="newIssues.entry_date" type="date" />
             </div>
 
             <div class="field">
               <label>نوع العميل</label>
-              <select v-model="newSuits.client_type" required>
+              <select v-model="newIssues.client_type" required>
                 <option value="">اختر نوع العميل</option>
                 <option value="شركة">شركة</option>
                 <option value="شخص">شخص</option>
@@ -104,12 +104,12 @@
 
             <div class="field">
               <label>إسم العميل</label>
-              <input v-model="newSuits.client" type="text" required />
+              <input v-model="newIssues.client" type="text" required />
             </div>
 
             <div class="field">
               <label>صفة العميل</label>
-              <select v-model="newSuits.client_role" required>
+              <select v-model="newIssues.client_role" required>
                 <option value="">اختر صفة العميل</option>
                 <option value="إدارة التسوية الودية">إدارة التسوية الودية</option>
                 <option value="اخر">اخر</option>
@@ -130,12 +130,12 @@
 
             <div class="field">
               <label>رقم المرجع الداخلي</label>
-              <input v-model="newSuits.internal_reference_number" type="text" />
+              <input v-model="newIssues.internal_reference_number" type="text" />
             </div>
 
             <div class="field">
               <label>الأولوية</label>
-              <select v-model="newSuits.priority" required>
+              <select v-model="newIssues.priority" required>
                 <option value="">إختر الأولوية</option>
                 <option value="عالية">عالية</option>
                 <option value="متوسطة">متوسطة</option>
@@ -148,11 +148,11 @@
           <div v-else-if="activeTab === 'الخصوم'" class="grid">
             <div class="field">
               <label>إسم الخصم</label>
-              <input v-model="newSuits.opponent" type="text" />
+              <input v-model="newIssues.opponent" type="text" />
             </div>
             <div class="field">
               <label>صفة الخصم</label>
-              <input v-model="newSuits.opponent_role" type="text" />
+              <input v-model="newIssues.opponent_role" type="text" />
             </div>
           </div>
 
@@ -232,7 +232,7 @@
 
           <!-- Form actions -->
           <div class="form-actions">
-            <button type="button" @click="resetSuitsForm" class="btn-ghost">
+            <button type="button" @click="resetIssuesForm" class="btn-ghost">
               <i class="fas fa-undo"></i>
               {{ ui.rtl  ? 'إعادة تعيين' : 'Reset' }}
             </button>
@@ -260,9 +260,9 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="suit in filteredSuits" :key="suit.name">
+              <tr v-for="suit in filteredIssues" :key="suit.name">
                 <td>{{ suit.name1 }}</td>
-                <td>{{ getSuitsTypeArabic(suit.scope_of_work) }}</td>
+                <td>{{ getIssuesTypeArabic(suit.scope_of_work) }}</td>
                 <td>{{ suit.client }}</td>
                 <td>{{ suit.opponent }}</td>
                 <td>
@@ -282,7 +282,7 @@
                   </div>
                 </td>
               </tr>
-              <tr v-if="filteredSuits.length === 0 && !isLoading">
+              <tr v-if="filteredIssues.length === 0 && !isLoading">
                 <td colspan="5" class="empty-state">لا يوجد دعوى لعرضهم</td>
               </tr>
             </tbody>
@@ -319,11 +319,11 @@ const isLoading = ref(false)
 const isCreating = ref(false)
 const isDeleting = ref(false)
 const searchQuery = ref('')
-const Suits = ref([])
+const Issues = ref([])
 const toast = ref({ show: false, text: '' })
 
 // Create form model
-const newSuits = reactive({
+const newIssues = reactive({
   name1: '',
   scope_of_work: '',
   entry_date: '',
@@ -348,7 +348,7 @@ const tabs = [
 const activeTab = ref('معلومات عامة')
 
 // Suit type labels
-const suitsTypeOptions = {
+const IssuesTypeOptions = {
   administrative: 'إدارية',
   inheritance_rights: 'إرث وحقوق ورثة',
   legal_fees: 'أتعاب محاماة',
@@ -359,19 +359,19 @@ const suitsTypeOptions = {
   criminal: 'جزائي',
 }
 
-// ========== FETCH SUITS ==========
-const fetchSuits = () => {
+// ========== FETCH Issues ==========
+const fetchIssues = () => {
   isLoading.value = true
 
   const resource = createResource({
     url: 'frappe.client.get_list',
     params: {
-      doctype: 'Suits',
+      doctype: 'Issues',
       fields: ['name', 'name1', 'scope_of_work', 'client', 'opponent'],
       limit_page_length: 0,
     },
     onSuccess(data) {
-      Suits.value = data || []
+      Issues.value = data || []
     },
     onError(err) {
       console.error(err)
@@ -382,15 +382,15 @@ const fetchSuits = () => {
 }
 
 // ========== CREATE SUIT ==========
-const createSuits = () => {
+const createIssues = () => {
   isCreating.value = true
 
   const resource = createResource({
-    url: 'crm.api2.create_Suits',
-    params: { ...newSuits },
+    url: 'crm.api2.create_Issues',
+    params: { ...newIssues },
     onSuccess(data) {
-      resetSuitsForm()
-      fetchSuits()
+      resetIssuesForm()
+      fetchIssues()
       showCreateForm.value = false
       showToast(data.message || 'تمت الإضافة بنجاح')
     },
@@ -404,18 +404,18 @@ const createSuits = () => {
   })
 }
 
-const resetSuitsForm = () => {
-  Object.keys(newSuits).forEach((k) => (newSuits[k] = ''))
+const resetIssuesForm = () => {
+  Object.keys(newIssues).forEach((k) => (newIssues[k] = ''))
 }
 
 // ========== FILTER ==========
-const filteredSuits = computed(() => {
+const filteredIssues = computed(() => {
   const q = searchQuery.value?.trim().toLowerCase()
-  if (!q) return Suits.value
-  return Suits.value.filter((s) => s.name1?.toLowerCase().includes(q))
+  if (!q) return Issues.value
+  return Issues.value.filter((s) => s.name1?.toLowerCase().includes(q))
 })
 
-const getSuitsTypeArabic = (type) => suitsTypeOptions[type] || type || '--'
+const getIssuesTypeArabic = (type) => IssuesTypeOptions[type] || type || '--'
 
 // ========== VIEW / EDIT ==========
 const viewSuit = (id) => {
@@ -423,7 +423,7 @@ const viewSuit = (id) => {
 }
 
 const editSuit = (id) => {
-  const suit = Suits.value.find(s => s.name === id)
+  const suit = Issues.value.find(s => s.name === id)
   if (!suit) {
     showToast(ui.rtl ? 'تعذر العثور على الدعوى' : 'Suit not found')
     return
@@ -507,7 +507,7 @@ function showToast(t) {
 
 // ========== MOUNT ==========
 onMounted(() => {
-  fetchSuits()
+  fetchIssues()
 })
 </script>
 

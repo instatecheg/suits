@@ -1,6 +1,6 @@
 /* Force background image on login page */
 body[data-path="login"] {
-    background-image: url("/assets/crm/images/abstract-composition-wallpaper-background-concept.jpg") !important;
+    background-image: url("/assets/crm/images/studio-background-concept-abstract-empty-light-gradient-purple-studio-room-background-product-plain-studio-background.jpg") !important;
     background-size: cover !important;
     background-repeat: no-repeat !important;
     background-position: center !important;
